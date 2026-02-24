@@ -1,0 +1,96 @@
+/* ============================================
+   COLORS & THEMES VARIABLES
+   ============================================ */
+
+:root {
+  /* Primary Colors - Dark Background */
+  --bg-dark-primary: #121212;
+  --bg-dark-secondary: #020216;
+  --bg-dark-tertiary: #0c0c0c;
+
+  /* Accent Colors - Pink/Rose */
+  --accent-pink-1: rgba(255, 107, 107, 0.9);
+  --accent-pink-2: rgba(255, 107, 107, 0.9);
+  --accent-pink-3:rgba(255, 107, 107, 0.9);
+  --accent-red: #ff6b6b;
+  --accent-red-light: #f06595;
+
+  /* Text Colors */
+  --text-light: #e0e0e0;
+  --text-white: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.7);
+  --text-dim: rgba(255, 255, 255, 0.85);
+  --text-placeholder: rgba(255, 255, 255, 0.5);
+
+  /* Object/Border Colors */
+  --color-white-transparent-5: rgba(255, 255, 255, 0.05);
+  --color-white-transparent-8: rgba(255, 255, 255, 0.08);
+  --color-white-transparent-12: rgba(255, 255, 255, 0.12);
+
+  /* Pink/Rose Transparent */
+  --color-pink-transparent-8: rgba(255, 107, 180, 0.08);
+  --color-pink-transparent-15: rgba(240, 101, 149, 0.15);
+  --color-pink-transparent-2: rgba(255, 107, 180, 0.2);
+  --color-pink-transparent-4: rgba(255, 107, 180, 0.4);
+  --color-pink-transparent-7: rgba(255, 107, 180, 0.7);
+
+  /* Red Transparent */
+  --color-red-transparent-1: rgba(255, 107, 107, 0.1);
+  --color-red-transparent-2: rgba(255, 107, 107, 0.2);
+  --color-red-transparent-3: rgba(255, 107, 107, 0.3);
+  --color-red-transparent-9: rgba(255, 107, 107, 0.9);
+
+  /* Black Transparent */
+  --color-black-transparent-7: rgba(0, 0, 0, 0.7);
+  --color-black-transparent-95: rgba(0, 0, 0, 0.95);
+
+  /* Dark Overlay Transparent */
+  --color-dark-overlay-7: rgba(15, 15, 30, 0.7);
+  --color-dark-overlay-8: rgba(15, 15, 30, 0.8);
+  --color-dark-secondary-5: rgba(26, 26, 46, 0.5);
+
+  /* ============================================
+     GRADIENTS
+     ============================================ */
+
+  /* Logo Gradient */
+  --gradient-logo: linear-gradient(135deg, var(--accent-pink-1) 0%, var(--accent-pink-2) 50%, var(--accent-pink-3) 100%);
+
+  /* Pink Accent Gradient (Horizontal) */
+  --gradient-accent-pink-h: linear-gradient(90deg, var(--accent-pink-1) 0%, var(--accent-pink-2) 100%);
+
+  /* Home Background Gradient */
+  --gradient-home-bg: linear-gradient(135deg, var(--bg-dark-primary) 0%, var(--bg-dark-secondary) 100%);
+
+  /* Featured Banner Gradient */
+  --gradient-featured-bg: linear-gradient(135deg, var(--bg-dark-secondary) 0%, var(--bg-dark-primary) 100%);
+
+  /* Featured Overlay Gradient */
+  --gradient-featured-overlay: linear-gradient(
+    135deg,
+    var(--color-dark-overlay-7) 0%,
+    var(--color-dark-secondary-5) 50%,
+    var(--color-dark-overlay-8) 100%
+  );
+
+  /* Featured Content Gradient */
+  --gradient-featured-content: linear-gradient(180deg, transparent 0%, var(--color-black-transparent-95) 100%);
+
+  /* Featured Button Gradient */
+  --gradient-btn-primary: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-red-light) 100%);
+
+  /* Red Accent Gradient (Horizontal) */
+  --gradient-accent-red-h: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-red-light) 100%);
+
+  /* ============================================
+     SHADOW & EFFECTS
+     ============================================ */
+
+  --shadow-navbar: 0 2px 8px var(--color-pink-transparent-15);
+  --shadow-featured: 0 20px 50px var(--color-black-transparent-7);
+  --shadow-card-sm: 0 8px 20px var(--color-red-transparent-2);
+  --shadow-card-md: 0 12px 30px var(--color-red-transparent-3);
+  --shadow-search: 0 0 12px var(--color-pink-transparent-15);
+  --shadow-btn: 0 8px 20px var(--color-red-transparent-3);
+  --shadow-btn-hover: 0 12px 30px var(--color-red-transparent-3);
+}
