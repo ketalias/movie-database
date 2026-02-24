@@ -135,7 +135,6 @@ export default function MoviePage() {
   const poster    = movie.posterPath ? imageUrl.poster(movie.posterPath, 'w500') : null;
   const trailer   = movie.getTrailer?.();
   const topCast   = movie.getTopCast?.(8) ?? movie.cast?.slice(0, 8) ?? [];
-  const director  = movie.cast ? null : null; // crew not in model yet — skip gracefully
   const genres    = movie.genres?.map((g) => g.name) ?? [];
 
   const scoreColor = movie.voteAverage >= 7.5 ? 'green' : movie.voteAverage >= 5 ? 'amber' : 'red';
