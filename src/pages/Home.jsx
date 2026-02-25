@@ -1,33 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import movieService, { imageUrl, getGenres, discoverMovies } from '../services/movieService';
+import { useState, useEffect } from 'react';
+import { getGenres } from '../services/movieService';
 import MovieCard from '../components/cards/MovieCard';
+import CarouselSection from '../components/layout/CarouselSection';
+import SearchSection from '../components/layout/SearchSection';
+import usePopularMovies from '../hooks/usePopularMovies';
+import useTopRatedMovies from '../hooks/useTopRatedMovies';
+import useDiscoverMovies from '../hooks/useDiscoverMovies';
 import './Home.css';
-
-function useCardsPerPage() {
-  const getCount = () => {
-    const w = window.innerWidth;
-    if (w > 1200) return 5;
-    if (w > 900) return 4;
-    if (w > 600) return 3;
-    if (w > 380) return 2;
-    return 1;
-  };
-
-  const [count, setCount] = useState(getCount);
-
-  useEffect(() => {
-    let timer;
-    const onResize = () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => setCount(getCount()), 150);
-    };
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-
-  return count;
-}
 
 // ── Хелпер пагінації ──
 function getPaginationRange(current, total) {
@@ -47,38 +26,17 @@ function getPaginationRange(current, total) {
   return range;
 }
 
-const GRID_PER_PAGE = 10;
+const GRID_PER_PAGE = 20;
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: currentYear - 1899 }, (_, i) => currentYear - i);
 
 export default function Home() {
-  // ── Навігація ──
-  const navigate = useNavigate();
   
-  // ── Carousel ──
-  const [featuredMovie, setFeaturedMovie] = useState(null);
-  const [sidebarMovies, setSidebarMovies] = useState([]);
-  const [topRatedMovies, setTopRatedMovies] = useState([]);
-  const [carouselPage, setCarouselPage] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const cardsPerPage = useCardsPerPage();
-
-  const goToPage = useCallback((page) => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setTimeout(() => {
-      setCarouselPage(page);
-      setIsAnimating(false);
-    }, 300);
-  }, [isAnimating]);
-
+  const { movies: popularMovies, loading: popularLoading, error: popularError } = usePopularMovies();
+  const { movies: topRatedMovies, loading: topRatedLoading, error: topRatedError } = useTopRatedMovies();
+  
   // ── Grid ──
-  const [allMovies, setAllMovies] = useState([]);
   const [gridPage, setGridPage] = useState(1);
-  const [totalGridPages, setTotalGridPages] = useState(1);
-  const [gridLoading, setGridLoading] = useState(false);
   const [genres, setGenres] = useState([]);
   const [filters, setFilters] = useState({
     genre: '',
@@ -89,92 +47,18 @@ export default function Home() {
     sortBy: 'popularity.desc',
   });
 
-  const CARDS_PER_PAGE = useCardsPerPage();
-  const totalPages = Math.ceil(topRatedMovies.length / CARDS_PER_PAGE);
+  // ── Discover 
+  const { movies: allMovies, totalPages: totalGridPages, loading: gridLoading } = useDiscoverMovies(gridPage, filters);
+
+  const loading = popularLoading || topRatedLoading;
+  const error = popularError || topRatedError;
   const hasActiveFilters = filters.genre || filters.yearMin || filters.yearMax ||
     filters.ratingMin || filters.ratingMax || filters.sortBy !== 'popularity.desc';
 
-  // ── Скидання сторінки карусель при ресайзі ──
-  useEffect(() => {
-    setCarouselPage((prev) => Math.min(prev, Math.max(0, totalPages - 1)));
-  }, [totalPages]);
-
-  // ── Початкове завантаження ──
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        setLoading(true);
-        const [popularResult, topRatedResult] = await Promise.all([
-          movieService.getPopularMovies(1),
-          movieService.getTopRatedMovies(1),
-        ]);
-
-        if (popularResult.results.length > 0) {
-          setFeaturedMovie(popularResult.results[0]);
-          setSidebarMovies(popularResult.results.slice(1, 4));
-        }
-        if (topRatedResult.results.length > 0) {
-          setTopRatedMovies(topRatedResult.results);
-        }
-        setError(null);
-      } catch (err) {
-        setError('Failed to load movies');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMovies();
-  }, []);
-
-  // ── Завантаження жанрів ──
   useEffect(() => {
     getGenres('en').then(setGenres);
   }, []);
 
-  // ── Завантаження гріду при зміні фільтрів/сторінки ──
-  useEffect(() => {
-    const fetchGrid = async () => {
-      setGridLoading(true);
-      window.scrollTo({ top: document.querySelector('.movies-section')?.offsetTop - 20, behavior: 'smooth' });
-
-      try {
-        const params = {
-          page: gridPage,
-          sort_by: filters.sortBy,
-          ...(filters.genre && { with_genres: filters.genre }),
-          ...(filters.yearMin && { 'primary_release_date.gte': `${filters.yearMin}-01-01` }),
-          ...(filters.yearMax && { 'primary_release_date.lte': `${filters.yearMax}-12-31` }),
-          ...(filters.ratingMin && { 'vote_average.gte': filters.ratingMin }),
-          ...(filters.ratingMax && { 'vote_average.lte': filters.ratingMax }),
-        };
-        const result = await discoverMovies(params);
-        setAllMovies(result.results || []);
-        setTotalGridPages(Math.min(result.total_pages || 1, 500));
-      } catch (err) {
-        console.error('Grid fetch error:', err);
-      } finally {
-        setGridLoading(false);
-      }
-    };
-    fetchGrid();
-  }, [filters, gridPage]);
-
-  // ── Авто-скрол карусель ──
-  useEffect(() => {
-    if (totalPages <= 1) return;
-    const interval = setInterval(() => {
-      goToPage((carouselPage + 1) % totalPages);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [totalPages, carouselPage, isAnimating, goToPage]);
-
-  // ── Карусель навігація з анімацією ─
-
-  const handleCarouselPrev = () => goToPage((carouselPage - 1 + totalPages) % totalPages);
-  const handleCarouselNext = () => goToPage((carouselPage + 1) % totalPages);
-
-  // ── Фільтри ──
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setGridPage(1);
@@ -188,114 +72,15 @@ export default function Home() {
   if (loading) return <div className="home-page loading">Loading...</div>;
   if (error) return <div className="home-page error">{error}</div>;
 
-  const backdropUrl = featuredMovie
-    ? imageUrl.backdrop(featuredMovie.backdropPath, 'w1280')
-    : null;
-
   return (
     <div className="home-page">
-      <div className="home-container">
-
-        {/* Featured Movie Banner */}
-        <div className="featured-section">
-          <div 
-            className="featured-banner-wrapper"
-            onClick={() => navigate(`/movie/${featuredMovie?.id}`)}
-            style={{ cursor: 'pointer' }}
-          >
-            {backdropUrl && (
-              <img src={backdropUrl} alt={featuredMovie.title} className="featured-backdrop" />
-            )}
-            <div className="featured-overlay" />
-            <div className="featured-content">
-              <h1 className="featured-title">{featuredMovie?.title}</h1>
-              <div className="featured-meta">
-                <span className="featured-rating">
-                  <span className="rating-icon">★</span>
-                  {featuredMovie?.voteAverage?.toFixed(1)}/10
-                </span>
-                <span className="featured-year">{featuredMovie?.releaseYear || 'N/A'}</span>
-              </div>
-              <p className="featured-description">
-                {featuredMovie?.overview || 'No description available'}
-              </p>
-              <button 
-                className="featured-btn"
-                onClick={() => navigate(`/movie/${featuredMovie?.id}`)}
-              >
-                Watch Now
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Sidebar */}
-        <div className="sidebar-section">
-          <h2 className="sidebar-title">Trending Now</h2>
-          <div className="sidebar-movies">
-            {sidebarMovies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} variant="sidebar" />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Top Rated Carousel */}
-      {topRatedMovies.length > 0 && (
-        <div className="carousel-section">
-          <div className="carousel-wrapper">
-            <h2 className="carousel-title">Top Rated Movies</h2>
-
-            <div className="carousel-container">
-              <button
-                className="carousel-btn carousel-btn-prev"
-                onClick={handleCarouselPrev}
-                disabled={carouselPage === 0}
-                aria-label="Previous"
-              >
-                ‹
-              </button>
-
-              <div className={`carousel-track ${isAnimating ? 'is-animating' : ''}`}>
-                {topRatedMovies
-                  .slice(carouselPage * cardsPerPage, (carouselPage + 1) * cardsPerPage)
-                  .map((movie) => (
-                    <div key={movie.id} className="carousel-item">
-                      <MovieCard movie={movie} variant="carousel" />
-                    </div>
-                  ))}
-              </div>
-
-              <button
-                className="carousel-btn carousel-btn-next"
-                onClick={handleCarouselNext}
-                disabled={carouselPage >= totalPages - 1}
-                aria-label="Next"
-              >
-                ›
-              </button>
-            </div>
-
-            <div className="carousel-indicators">
-              {Array.from({ length: totalPages }).map((_, i) => (
-                <button
-                  key={i}
-                  className={`carousel-indicator ${i === carouselPage ? 'active' : ''}`}
-                  onClick={() => goToPage(i)}
-                  aria-label={`Page ${i + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ══════════════════════════════════
-          MOVIES GRID SECTION
-      ══════════════════════════════════ */}
+      <CarouselSection 
+        topRatedMovies={topRatedMovies} 
+        popularMovies={popularMovies} 
+        loading={loading} 
+      />
       <div className="movies-section">
 
-        {/* Header */}
         <div className="movies-header">
           <h2 className="movies-title">Browse Movies</h2>
           {hasActiveFilters && (
