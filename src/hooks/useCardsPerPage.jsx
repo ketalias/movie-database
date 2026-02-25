@@ -6,7 +6,7 @@ export default function useCardsPerPage() {
     if (w > 1200) return 5;
     if (w > 900) return 4;
     if (w > 600) return 3;
-    if (w > 380) return 2;
+    if (w > 580) return 1;
     return 1;
   };
 

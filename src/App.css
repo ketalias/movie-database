@@ -1,0 +1,9 @@
+@import "./styles/variables.css";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-dark-tertiary);
+}

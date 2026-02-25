@@ -4,6 +4,7 @@ import MoviePage from './pages/MoviePage';
 import SearchPage from './pages/Search';
 import NavBar from './components/layout/NavBar';
 import FooterComp from './components/layout/FooterComp';
+import './App.css';
 
 function App() {
   return (

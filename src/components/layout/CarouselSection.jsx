@@ -66,7 +66,7 @@ export default function CarouselSection({ topRatedMovies, popularMovies, loading
 
         {/* Featured Movie Banner */}
         <div className="featured-section">
-          <div 
+          <div
             className="featured-banner-wrapper"
             onClick={() => navigate(`/movie/${featuredMovie?.id}`)}
             style={{ cursor: 'pointer' }}
@@ -87,7 +87,7 @@ export default function CarouselSection({ topRatedMovies, popularMovies, loading
               <p className="featured-description">
                 {featuredMovie?.overview || 'No description available'}
               </p>
-              <button 
+              <button
                 className="featured-btn"
                 onClick={() => navigate(`/movie/${featuredMovie?.id}`)}
               >
@@ -142,17 +142,6 @@ export default function CarouselSection({ topRatedMovies, popularMovies, loading
               >
                 ›
               </button>
-            </div>
-
-            <div className="carousel-indicators">
-              {Array.from({ length: totalPages }).map((_, i) => (
-                <button
-                  key={i}
-                  className={`carousel-indicator ${i === carouselPage ? 'active' : ''}`}
-                  onClick={() => goToPage(i)}
-                  aria-label={`Page ${i + 1}`}
-                />
-              ))}
             </div>
           </div>
         </div>
