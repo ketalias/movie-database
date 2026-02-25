@@ -5,5 +5,5 @@
 }
 
 body {
-  background-color: var(--bg-dark-tertiary);
+  background: var(--gradient-home-bg);
 }

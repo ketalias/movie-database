@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-import { getGenres } from '../services/movieService';
+import { useNavigate } from 'react-router-dom';
+import { getGenres, imageUrl } from '../services/movieService';
 import MovieCard from '../components/cards/MovieCard';
-import CarouselSection from '../components/layout/CarouselSection';
+import CarouselSection from '../components/layout/Carousel';
 import usePopularMovies from '../hooks/usePopularMovies';
 import useTopRatedMovies from '../hooks/useTopRatedMovies';
 import useDiscoverMovies from '../hooks/useDiscoverMovies';
 import './Home.css';
 
-// ── Хелпер пагінації ──
 function getPaginationRange(current, total) {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
 
@@ -30,11 +30,11 @@ const currentYear = new Date().getFullYear();
 const years = Array.from({ length: currentYear - 1899 }, (_, i) => currentYear - i);
 
 export default function Home() {
+  const navigate = useNavigate();
   
   const { movies: popularMovies, loading: popularLoading, error: popularError } = usePopularMovies();
   const { movies: topRatedMovies, loading: topRatedLoading, error: topRatedError } = useTopRatedMovies();
   
-  // ── Grid ──
   const [gridPage, setGridPage] = useState(1);
   const [genres, setGenres] = useState([]);
   const [filters, setFilters] = useState({
@@ -46,7 +46,6 @@ export default function Home() {
     sortBy: 'popularity.desc',
   });
 
-  // ── Discover 
   const { movies: allMovies, totalPages: totalGridPages, loading: gridLoading } = useDiscoverMovies(gridPage, filters);
 
   const loading = popularLoading || topRatedLoading;
@@ -70,16 +69,63 @@ export default function Home() {
 
   if (loading) return <div className="home-page loading">Loading...</div>;
   if (error) return <div className="home-page error">{error}</div>;
+  const featuredMovie = popularMovies.length > 0 ? popularMovies[0] : null;
+  const sidebarMovies = popularMovies.slice(1, 4);
+  const backdropUrl = featuredMovie
+    ? imageUrl.backdrop(featuredMovie.backdropPath, 'w1280')
+    : null;
 
   return (
     <div className="home-page">
+      <div className="home-container">
+        <div className="featured-section">
+          <div
+            className="featured-banner-wrapper"
+            onClick={() => navigate(`/movie/${featuredMovie?.id}`)}
+            style={{ cursor: 'pointer' }}
+          >
+            {backdropUrl && (
+              <img src={backdropUrl} alt={featuredMovie?.title} className="featured-backdrop" />
+            )}
+            <div className="featured-overlay" />
+            <div className="featured-content">
+              <h1 className="featured-title">{featuredMovie?.title}</h1>
+              <div className="featured-meta">
+                <span className="featured-rating">
+                  <span className="rating-icon">★</span>
+                  {featuredMovie?.voteAverage?.toFixed(1)}/10
+                </span>
+                <span className="featured-year">{featuredMovie?.releaseYear || 'N/A'}</span>
+              </div>
+              <p className="featured-description">
+                {featuredMovie?.overview || 'No description available'}
+              </p>
+              <button
+                className="featured-btn"
+                onClick={() => navigate(`/movie/${featuredMovie?.id}`)}
+              >
+                Watch Now
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="sidebar-section">
+          <h2 className="sidebar-title">Trending Now</h2>
+          <div className="sidebar-movies">
+            {sidebarMovies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} variant="sidebar" />
+            ))}
+          </div>
+        </div>
+      </div>
+
       <CarouselSection 
         topRatedMovies={topRatedMovies} 
-        popularMovies={popularMovies} 
         loading={loading} 
       />
-      <div className="movies-section">
 
+      <div className="movies-section">
         <div className="movies-header">
           <h2 className="movies-title">Browse Movies</h2>
           {hasActiveFilters && (
@@ -89,7 +135,6 @@ export default function Home() {
           )}
         </div>
 
-        {/* Filters */}
         <div className="filters-bar">
           <div className="filter-group">
             <label className="filter-label">Genre</label>
@@ -174,7 +219,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Grid */}
         {gridLoading ? (
           <div className="grid-loading">
             {Array.from({ length: GRID_PER_PAGE }).map((_, i) => (
@@ -196,7 +240,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* Pagination */}
         {!gridLoading && totalGridPages > 1 && (
           <div className="pagination">
             <button

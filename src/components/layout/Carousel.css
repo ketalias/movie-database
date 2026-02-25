@@ -1,0 +1,79 @@
+.carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3.5rem;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-pink-transparent-12);
+  color: var(--accent-pink-1);
+  font-size: 4.4rem;
+  cursor: pointer;
+  transition:
+    background 0.25s,
+    transform 0.25s,
+    color 0.25s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.carousel-btn:hover {
+  color: var(--text-white);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn-prev {
+  left: 0;
+}
+.carousel-btn-next {
+  right: 0;
+}
+
+.carousel-track-wrapper {
+  width: 100%;
+  overflow: hidden;
+  margin: 0 -0.425rem;
+}
+
+.carousel-track {
+  display: flex;
+  will-change: transform;
+}
+
+.carousel-item {
+  padding: 0 0.425rem;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.carousel-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--color-white-transparent-5);
+  border: 1px solid var(--color-pink-transparent-2);
+  cursor: pointer;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s,
+    transform 0.25s;
+}
+
+.carousel-card:hover {
+  border-color: var(--color-pink-transparent-4);
+  transform: translateY(-4px);
+}

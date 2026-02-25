@@ -83,19 +83,13 @@
   background: var(--color-pink-transparent-12);
 }
 
-/* ═══════════════════════════════════════
-   PAGE WRAPPER
-═══════════════════════════════════════ */
+
 
 .movie-page {
   min-height: 100vh;
   background: var(--gradient-home-bg);
   color: var(--text-white);
 }
-
-/* ═══════════════════════════════════════
-   HERO
-═══════════════════════════════════════ */
 
 .movie-hero {
   position: relative;
@@ -160,9 +154,6 @@
   font-size: 1rem;
 }
 
-/* ═══════════════════════════════════════
-   MAIN LAYOUT
-═══════════════════════════════════════ */
 
 .movie-main {
   max-width: 1300px;
@@ -245,9 +236,6 @@
   font-size: 0.75rem;
 }
 
-/* ═══════════════════════════════════════
-   INFO COLUMN
-═══════════════════════════════════════ */
 
 .movie-info-col {
   display: flex;

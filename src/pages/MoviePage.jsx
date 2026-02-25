@@ -142,7 +142,6 @@ export default function MoviePage() {
   return (
     <div className="movie-page">
 
-      {/* ── Hero backdrop ── */}
       <div className="movie-hero">
         {backdrop ? (
           <img
@@ -163,10 +162,8 @@ export default function MoviePage() {
         </button>
       </div>
 
-      {/* ── Main content ── */}
       <div className="movie-main">
 
-        {/* Poster */}
         <div className="movie-poster-col">
           <div className="movie-poster-wrapper">
             {poster ? (
@@ -188,10 +185,8 @@ export default function MoviePage() {
           </div>
         </div>
 
-        {/* Info */}
         <div className="movie-info-col">
 
-          {/* Title block */}
           <div className="movie-title-block">
             {genres.length > 0 && (
               <div className="genre-tags">
@@ -206,7 +201,6 @@ export default function MoviePage() {
             )}
           </div>
 
-          {/* Score row */}
           <div className="movie-score-row">
             <div className="score-main">
               <RatingRing value={movie.voteAverage} />
@@ -242,7 +236,6 @@ export default function MoviePage() {
             </div>
           </div>
 
-          {/* Tabs */}
           <div className="movie-tabs">
             {['overview', 'details', 'cast'].map((tab) => (
               <button
@@ -255,7 +248,6 @@ export default function MoviePage() {
             ))}
           </div>
 
-          {/* Tab: Overview */}
           {activeTab === 'overview' && (
             <div className="tab-content tab-overview">
               <p className="movie-overview">
@@ -264,7 +256,6 @@ export default function MoviePage() {
             </div>
           )}
 
-          {/* Tab: Details */}
           {activeTab === 'details' && (
             <div className="tab-content tab-details">
               <div className="stats-grid">
@@ -281,7 +272,6 @@ export default function MoviePage() {
             </div>
           )}
 
-          {/* Tab: Cast */}
           {activeTab === 'cast' && (
             <div className="tab-content tab-cast">
               {topCast.length > 0 ? (

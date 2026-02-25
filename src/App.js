@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import MoviePage from './pages/MoviePage';
-import SearchPage from './pages/Search';
+import SearchMovie from './pages/SearchMovie';
 import NavBar from './components/layout/NavBar';
 import FooterComp from './components/layout/FooterComp';
 import './App.css';
@@ -13,7 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/movie/:id" element={<MoviePage />} />
-        <Route path="/search" element={<SearchPage />} />
+        <Route path="/search" element={<SearchMovie />} />
       </Routes>
       <FooterComp />
     </Router>

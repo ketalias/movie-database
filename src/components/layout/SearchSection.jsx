@@ -27,7 +27,6 @@ export default function SearchSection() {
 
   return (
     <div className="search-section">
-      {/* Search Input */}
       <div className="search-container">
         <form onSubmit={handleSubmit} className="search-wrapper">
           <input
@@ -51,7 +50,6 @@ export default function SearchSection() {
         </form>
       </div>
 
-      {/* Search Results */}
       {query && (
         <div className="search-results">
           {loading ? (
