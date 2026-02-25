@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { getGenres } from '../services/movieService';
 import MovieCard from '../components/cards/MovieCard';
 import CarouselSection from '../components/layout/CarouselSection';
-import SearchSection from '../components/layout/SearchSection';
 import usePopularMovies from '../hooks/usePopularMovies';
 import useTopRatedMovies from '../hooks/useTopRatedMovies';
 import useDiscoverMovies from '../hooks/useDiscoverMovies';
