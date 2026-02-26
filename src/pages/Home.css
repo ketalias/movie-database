@@ -5,9 +5,8 @@
   flex-direction: column;
   gap: 4rem;
   margin: 0 auto;
-  min-height: calc(100vh - 80px);
+  box-sizing: border-box;
   max-width: 1600px;
-  padding: 2rem;
   color: var(--text-light);
 }
 
